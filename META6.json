@@ -1,0 +1,13 @@
+{
+  "perl" : "6.*",
+  "name" : "RedisPerlaetus",
+  "license" : "Apache-2.0",
+  "version" : "0.1.0",
+  "description" : "",
+  "authors" : ["Alex Maslakov"],
+  "provides" : {
+    "RedisPerlaetus" : "lib/RedisPerlaetus.pm6"
+},
+  "depends" : [],
+  "source-url" : "git@github.com:GildedHonour/RedisPerlaetus.git"
+}
