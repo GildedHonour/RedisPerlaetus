@@ -1,22 +1,27 @@
 unit package RedisPerlaetus;
 
+# todo
 class RedisPerlaetus::Client {
   has Str $.url;
   has Str $.host;
   has Int $.port;
   has Str $.path;
+  has Socket::INET $.connection is rw;
   # timeout
   # connect_timeout
   # password
   # db
   # id
 
-  method new(%options) {
 
+  # todo
+  method new(%options) {
+    $.connection = IO::Socket::INET.new(:$host = $host, :$port = $port);
   }
 
-  method !call-command($cmd, ) {
 
+  method !call-command($cmd, *$arg) {
+    $.connection.write($cmd, )
   }
 
   method bitcount(%key, $start? = 0, $end?)
@@ -40,33 +45,13 @@ class RedisPerlaetus::Client {
   method brpop()
   method brpoplpush()
 
-  method client() kill
-  method client() list
-  method client() getname
-  method client() pause
-  method client() reply
-  method client() setname
 
+  enum ClientCommand<Kill List Getname Pause Reply Setname>;
+  method client(ClientCommand $cmd)
 
-  method cluster() addslots
-  method cluster() count-failure-reports
-  method cluster() countkeysinslot
-  method cluster() delslots
-  method cluster() failover
-  method cluster() forget
-  method cluster() getkeysinslot
-  method cluster() info
-  method cluster() keyslot
-  method cluster() meet
-  method cluster() nodes
-  method cluster() replicate
-  method cluster() reset
-  method cluster() saveconfig
-  method cluster() set-config-epoch
-  method cluster() setslot
-  method cluster() slaves
-  method cluster() slots
-
+  enum ClusterCommand<Addslots CountFailureReports CountKeysinSlot Delslots Failover Forget GetKeysInSlot
+Info Keyslot Meet Nodes Replicate Reset SaveConfig SetConfigEpoch SetSlot Slaves Slots>;
+  method cluster(ClusterCommand $cmd)
 
   enum Command<Count Getkeys Info>;
   method command(Command $cmd)
@@ -118,7 +103,14 @@ class RedisPerlaetus::Client {
   method incr()
   method incrby()
   method incrbyfloat()
-  method info()
+
+  enum InfoSection <Server Clients Memory Persistance Stats Replication CPU CommandStats Cluster
+                      KeySpace All Default>;
+
+  method info(InfoSection $infSect = InfoSection::Default--> Hash[Str Str]) {
+    call-command("info")
+  }
+
   method keys()
   method lastsave()
   method lindex()
@@ -168,11 +160,8 @@ class RedisPerlaetus::Client {
   method save()
   method scard()
 
-  method script() debug
-  method script() exists
-  method script() flush
-  method script() kill
-  method script() load
+  enum ScriptCommand<Debug Exists Flush Kill Load>;
+  method script(ScriptCommand $cmd)
 
   method sdiff()
   method sdiffstore()
@@ -234,4 +223,3 @@ class RedisPerlaetus::Client {
   method hscan()
   method zscan()
 }
-# todo
